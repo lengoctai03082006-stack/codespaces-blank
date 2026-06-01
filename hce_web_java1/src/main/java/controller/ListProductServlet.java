@@ -16,26 +16,48 @@ public class ListProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // Cấu hình đọc chữ tiếng Việt có dấu từ ô tìm kiếm không lỗi font
+        // 1. Cấu hình đọc chữ tiếng Việt có dấu từ ô tìm kiếm không lỗi font
         request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
         ProductDAO dao = new ProductDAO();
         String keyword = request.getParameter("q"); // Đọc từ khóa từ ô input name="q"
+        
+        // Nhận thêm tham số danh mục từ các thẻ tab nút bấm nếu có (?category=...)
+        String category = request.getParameter("category"); 
 
         List<Product> list;
 
-        // Nếu người dùng có nhập từ khóa thì thực hiện tìm kiếm, ngược lại lấy toàn bộ sản phẩm
-        if (keyword != null && !keyword.trim().isEmpty()) {
+        // 2. Kiểm tra và chuẩn hóa từ khóa gõ từ ô Tìm kiếm
+        if (keyword == null) {
+            keyword = "";
+        }
+        String keyLower = keyword.trim().toLowerCase();
+
+        // LOGIC THÔNG MINH: Nếu gõ từ khóa phân loại tiếng Việt, lấy toàn bộ sản phẩm để JSP tự lọc
+        if (keyLower.equals("trà") || keyLower.equals("tra") 
+                || keyLower.equals("trái cây") || keyLower.equals("trai cay") 
+                || keyLower.equals("gia vị") || keyLower.equals("gia vi")
+                || keyLower.equals("quả") || keyLower.equals("qua")
+                || keyLower.equals("sốt") || keyLower.equals("sot")
+                || keyLower.equals("mứt") || keyLower.equals("mut")) {
+            
+            list = dao.getAllProducts(); // Lấy tất cả danh sách sản phẩm gốc về
+            
+        } else if (!keyword.trim().isEmpty()) {
+            // Trường hợp gõ tên sản phẩm cụ thể bằng tiếng Anh (Ví dụ: "Chai", "Chang", "Chef"...)
             list = dao.searchProduct(keyword.trim());
         } else {
+            // Nếu ô tìm kiếm rỗng, mặc định lấy toàn bộ sản phẩm
             list = dao.getAllProducts();
         }
 
-        // Đẩy list kết quả vào Attribute gửi sang trang JSP
+        // 3. Đẩy list kết quả và từ khóa ngược lại Attribute để gửi sang trang JSP
         request.setAttribute("listProduct", list);
+        request.setAttribute("selectedCat", category); // Giữ trạng thái tab đang chọn
 
-        // Gọi đồng bộ chuyển tiếp sang file products.jsp
+        // 4. Gọi đồng bộ chuyển tiếp sang file products.jsp
         request.getRequestDispatcher("/products.jsp").forward(request, response);
     }
 

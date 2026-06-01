@@ -24,6 +24,7 @@ public class ProductDAO {
         }
     }
 
+    // Lấy toàn bộ danh sách hàng hóa trong kho
     public List<Product> getAllProducts() {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT ProductID, ProductName, SupplierID, CategoryID, "
@@ -59,7 +60,7 @@ public class ProductDAO {
         return list;
     }
 
-    // ĐÃ SỬA: Chuyển chuỗi ghép dòng truyền thống, xóa bỏ hoàn toàn dấu triple-quotes (""") lỗi
+    // ĐÃ SỬA: Chuyển sang nối chuỗi truyền thống, xóa sạch dấu triple-quotes gây lỗi gạch đỏ
     public List<Product> searchProduct(String keyword) {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT ProductID, ProductName, SupplierID, CategoryID, "
