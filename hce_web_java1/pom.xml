@@ -24,6 +24,14 @@
       <scope>provided</scope>
     </dependency>
 
+
+        <dependency>
+        <groupId>com.microsoft.sqlserver</groupId>
+        <artifactId>mssql-jdbc</artifactId>
+        <version>12.8.1.jre11</version>
+    </dependency>
+
+
     <!-- Thư viện để dùng JSP -->
     <dependency>
       <groupId>javax.servlet.jsp</groupId>
@@ -39,6 +47,9 @@
       <version>5.10.2</version>
       <scope>test</scope>
     </dependency>
+
+
+    
   </dependencies>
 
   <build>
