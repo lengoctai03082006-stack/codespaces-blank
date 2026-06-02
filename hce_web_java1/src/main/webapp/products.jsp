@@ -41,9 +41,10 @@
     .eco-brand-name { text-align: left; }
     .eco-name-main { color: #27ae60; font-weight: 800; font-size: 24px; text-transform: uppercase; }
     .eco-name-sub { color: #555; font-size: 12px; text-transform: uppercase; font-weight: 600; }
-    .eco-search-site { display: flex; align-items: center; border-bottom: 2px solid #27ae60; }
-    .eco-search-site input { border: none; outline: none; font-size: 13px; padding: 5px; background: transparent; }
-    .eco-search-site i { color: #27ae60; }
+    
+    /* Giữ khoảng trống bên phải cân bằng sau khi xóa tìm kiếm nhanh */
+    .eco-right-space { width: 200px; }
+    
     .eco-nav-bar { background-color: #1e7e34; padding: 0 8%; display: flex; list-style: none; }
     .eco-nav-bar li a { display: block; padding: 14px 20px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 13px; text-transform: uppercase; }
 
@@ -96,10 +97,8 @@
                     <p class="eco-name-sub">Hệ thống tổng kho thực phẩm sạch</p>
                 </div>
             </div>
-            <div class="eco-search-site">
-                <input type="text" placeholder="Tìm kiếm nhanh...">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </div>
+            
+            <div class="eco-right-space"></div>
         </div>
         <ul class="eco-nav-bar">
             <li><a href="timsanpham">Trang chủ dữ liệu</a></li>
@@ -157,7 +156,7 @@
                         String nhomSp = ""; 
                         String keyNhom = ""; 
                         
-                        // ================= KHU VỰC PHÂN LOẠI CHI TIẾT - ĐÃ XOÁ HẾT LẶP TÁO =================
+                        // ================= KHU VỰC PHÂN LOẠI CHI TIẾT =================
                         if(p.getProductID() == 1 || nameOrig.equalsIgnoreCase("Chai")) {
                             nameVn = "Trà thảo mộc đóng chai"; nhomSp = "Trà / Đồ uống"; keyNhom = "tra";
                         } else if(p.getProductID() == 2 || nameOrig.equalsIgnoreCase("Chang")) {
@@ -179,7 +178,6 @@
                         } else if(p.getProductID() == 10 || nameOrig.equalsIgnoreCase("Ikura")) {
                             nameVn = "Trà Ô Long tôm nõn hảo hạng"; nhomSp = "Trà / Đồ uống"; keyNhom = "tra";
                         } 
-                        // ----- THÊM MỚI SẢN PHẨM PHONG PHÚ TỪ ID #11 ĐẾN #30+ -----
                         else if(p.getProductID() == 11 || nameOrig.contains("Queso Cabrales")) {
                             nameVn = "Sốt bơ phô mai lắc vị cay"; nhomSp = "Gia vị / Sốt"; keyNhom = "giavi";
                         } else if(p.getProductID() == 12 || nameOrig.contains("Queso Manchego")) {
@@ -221,29 +219,24 @@
                         } else if(p.getProductID() == 30 || nameOrig.contains("Nord-Ost Matjeshering")) {
                             nameVn = "Cá cơm ngần rim tỏi ớt cay"; nhomSp = "Trái cây / Quả sấy"; keyNhom = "traicay";
                         } else {
-                            // Nhánh cuối cho các ID lớn hơn nữa (Nếu có)
                             nameVn = "Nông sản sấy khô cao cấp Eco"; nhomSp = "Trái cây / Quả sấy"; keyNhom = "traicay";
                         }
 
                         // TRÌNH TÌM KIẾM THÔNG MINH (LOGIC CHÍNH):
-                        // Điều kiện 1: Lọc theo Tab Danh mục đang click chọn (nếu có)
                         if (!selectedCat.isEmpty() && !selectedCat.equalsIgnoreCase(keyNhom)) {
                             continue; 
                         }
                         
-                        // Điều kiện 2: Kiểm tra từ khóa nhập vào ô Search
                         if (!searchKey.isEmpty()) {
-                            // Chuyển tên sản phẩm và tên nhóm về chữ thường
                             String nameLower = nameVn.toLowerCase();
                             String nhomLower = nhomSp.toLowerCase();
                             
-                            // Nếu từ khóa KHÔNG nằm trong tên sản phẩm VÀ KHÔNG nằm trong tên nhóm hàng -> Bỏ qua dòng này
                             if (!nameLower.contains(searchKey) && !nhomLower.contains(searchKey)) {
                                 continue;
                             }
                         }
                         
-                        countRender++; // Tăng biến đếm khi tìm thấy dòng phù hợp
+                        countRender++; 
             %>
                 <tr>
                     <td><strong>#<%= p.getProductID() %></strong></td>
@@ -256,7 +249,6 @@
                     }
                 }
                 
-                // Hiển thị thông báo khi không tìm thấy kết quả nào trùng khớp
                 if(countRender == 0){
             %>
                 <tr>
